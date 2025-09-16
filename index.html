@@ -318,6 +318,10 @@
 </div>
 
   <script>
+    //The background music was created by Ikoliks, https://pixabay.com/music/meditationspiritual-meditation-music-322801/
+    const bgAudio = new Audio("background-track.mp3");
+    bgAudio.loop = true;
+    bgAudio.volume = 0.1;  // so it stays background, not overwhelming
     const gridSize = 6;
     const colors = ["G", "B"];
     const turnIndicator = document.getElementById("turn-indicator");
@@ -466,7 +470,7 @@
     if ((currentPlayer ==="P1" && e.key === " ") || 
         (currentPlayer ==="P2" && e.key === "Enter")) {
       glowAttack(player);
-     
+       playVictoryChime();
       let distance = Math.abs(player.row - opponent.row) + Math.abs(player.col - opponent.col);
       if (distance <= 2) {
     // Successful attack
@@ -503,6 +507,12 @@
     // --- Glow opponent Activation ---
     if ((currentPlayer === "P1" && e.key === "g") ||
       (currentPlayer === "P2" && e.key === "/")) {
+       //playChime();
+       if (currentPlayer === "P1") {
+        playChimeForPlayer("P1");
+        } else {
+        playChimeForPlayer("P2");
+        }
 
     if (player.glows > 0) {
       player.glows--;
@@ -535,6 +545,12 @@
     // --- Camouflage keys ---
   if ((currentPlayer === "P1" && e.key === "c") || 
      (currentPlayer === "P2" && e.key === "Shift")) {
+     // playChime();
+     if (currentPlayer === "P1") {
+        playChimeForPlayer("P1");
+        } else {
+        playChimeForPlayer("P2");
+        }
     const camouflagedColor = grid[player.row][player.col];
 
     player.camouflaged = true;
@@ -563,12 +579,19 @@
        (currentPlayer === "P2" && e.key === "ArrowRight")){
         
         
+        
         const dir = directions[key];
         const newRow = player.row + dir[0];
         const newCol = player.col + dir[1];
 
         // Stay inside grid bounds
         if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+        //playChime();
+        if (currentPlayer === "P1") {
+        playChimeForPlayer("P1");
+        } else {
+        playChimeForPlayer("P2");
+        }
         player.row = newRow;
         player.col = newCol;
     
@@ -592,38 +615,69 @@
             } else {
                 currentPlayer = "P1";
             }
+           
         }
     renderGrid();
     }
  
 } });
 
-function glowOpponent(opponent) {
-  // Save original player color (black for P1, blue for P2, etc.)
-  let originalColor = opponent.defaultColor;
+// Robust interval-based glow that guarantees final color
+function glowOpponent(opponent, duration = 1000) {
+  // Defensive: cancel any previous glow for this opponent
+  if (opponent._glowInterval) {
+    clearInterval(opponent._glowInterval);
+    delete opponent._glowInterval;
+  }
 
-  // Extended sequence of glow colors (12 steps)
-  let glowColors = [
+  const originalColor = opponent.defaultColor || opponent.playerColor || "black";
+
+  const glowColors = [
     "#ffff66", "#fff176", "#ffee58", "#ffeb3b", "#fdd835", "#fbc02d",
     "#f9a825", "#f57f17", "#ff9800", "#fb8c00", "#f57c00", "#ef6c00"
   ];
 
+  const steps = glowColors.length;
+  const intervalTime = Math.max(10, Math.round(duration / steps)); // ms per step
   let step = 0;
-  let intervalTime = 1000 / glowColors.length; // ≈83ms per step
 
-  let glowInterval = setInterval(() => {
+  // Make sure the opponent is visible before starting the glow
+  opponent.symbol = "●";
+
+  // store interval id so we can clear it later if needed
+  opponent._glowInterval = setInterval(() => {
+    // update playerColor and re-render
     opponent.playerColor = glowColors[step];
     renderGrid();
+
     step++;
 
-    if (step >= glowColors.length) {
-      clearInterval(glowInterval);
+    if (step >= steps) {
+      // finished: clear interval and restore original color
+      clearInterval(opponent._glowInterval);
+      delete opponent._glowInterval;
 
-      // Restore original color after last glow
-      setTimeout(() => {
-        opponent.playerColor = originalColor;
-        renderGrid();
-      }, intervalTime);
+      // set the logical color back to the original
+      opponent.playerColor = originalColor;
+
+      // final render to sync DOM
+      renderGrid();
+
+      // Force a browser reflow/repaint and explicitly set the final color on the cell element.
+      // This makes the final color stick even if some other small repaint race happens.
+      const cellId = `cell-${opponent.row}-${opponent.col}`;
+      // Use requestAnimationFrame twice to let browser process the render
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const cellEl = document.getElementById(cellId);
+          if (cellEl) {
+            // directly set inline style as a last-resort guarantee of appearance
+            cellEl.style.color = originalColor;
+            // if you animate background instead, use:
+            // cellEl.style.backgroundColor = originalColor;
+          }
+        });
+      });
     }
   }, intervalTime);
 }
@@ -671,10 +725,14 @@ function checkCornerWin() {
     gameOver = true;
     document.getElementById("reset-btn").disabled = false;
     renderGrid();
+    playVictoryChime();
+   //  bgAudio.pause();
+   //         bgAudio.currentTime = 0;
   } else if (players.P2.row === 0 && players.P2.col === 0) {
     showMessage("Player 2 Wins by reaching the corner!");
     players.P1.symbol = "💥"; // explosion for loser
     gameOver = true;
+    playVictoryChime();
     document.getElementById("reset-btn").disabled = false;
     renderGrid();
   }
@@ -700,11 +758,91 @@ function showMessage(msg) {
   
 }
 
+// Define fixed chime frequencies for each player
+const playerChimes = {
+  P1: 329.63, // E4
+  P2: 392.00  // G4
+};
+
+function playChimeForPlayer(playerId) {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  const freq = playerChimes[playerId]; // fixed tone per player
+
+  // Main oscillator
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.2, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+
+  osc.connect(gain).connect(ctx.destination);
+
+  // Add a subtle shimmer
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = "sine";
+  osc2.frequency.value = freq * 1.01;
+  gain2.gain.setValueAtTime(0.05, ctx.currentTime);
+  gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+  osc2.connect(gain2).connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 2.0);
+  osc2.start();
+  osc2.stop(ctx.currentTime + 2.0);
+}
 
 
+function playChime() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  // Midrange pentatonic (C4–E5 range, no super low tones)
+  const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+
+  // Pick a random midrange note
+  const freq = pentatonic[Math.floor(Math.random() * pentatonic.length)];
+
+  // Main oscillator
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.2, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+
+  osc.connect(gain).connect(ctx.destination);
+
+  // Add subtle richness with a slightly detuned oscillator
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = "sine";
+  osc2.frequency.value = freq * 1.01; // gentle shimmer
+  gain2.gain.setValueAtTime(0.05, ctx.currentTime);
+  gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+  osc2.connect(gain2).connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 2.0);
+  osc2.start();
+  osc2.stop(ctx.currentTime + 2.0);
+}
+
+function playVictoryChime() {
+  // Play 3 chimes spaced 300ms apart
+  playChime();
+  setTimeout(() => playChime(), 300);
+  setTimeout(() => playChime(), 600);
+}
+
+     
     document.getElementById("begin-btn").addEventListener("click", () => {
     document.getElementById("overlay").style.display = "none";
    // 🎵 Later, you can also start your game music here
+   bgAudio.play();
    document.getElementById("reset-btn").addEventListener("click", resetGame);
      renderGrid();
     });
