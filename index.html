@@ -226,7 +226,6 @@
 }
 
 
-/* Medium screens (tablets, smaller laptops) */
 @media (max-width: 1000px) {
   .grid {
     width: 75vmin;
@@ -239,6 +238,38 @@
   .reset-container button {
     font-size: 1rem;
     padding: 8px 16px;
+  }
+}
+
+/* Slightly smaller screens */
+@media (max-width: 900px) {
+  .grid {
+    width: 70vmin;
+  }
+  .hud-box {
+    font-size: 0.95rem;
+    padding: 7px 14px;
+    min-width: 95px;
+  }
+  .reset-container button {
+    font-size: 0.95rem;
+    padding: 7px 14px;
+  }
+}
+
+/* Tablet-ish range */
+@media (max-width: 800px) {
+  .grid {
+    width: 65vmin;
+  }
+  .hud-box {
+    font-size: 0.9rem;
+    padding: 7px 12px;
+    min-width: 90px;
+  }
+  .reset-container button {
+    font-size: 0.9rem;
+    padding: 7px 12px;
   }
 }
 
@@ -255,6 +286,54 @@
   .reset-container button {
     font-size: 0.9rem;
     padding: 6px 12px;
+  }
+}
+
+/* Between 651px and 700px */
+@media (max-width: 700px) and (min-width: 651px) {
+  .grid {
+    width: 58vmin;
+  }
+  .hud-box {
+    font-size: 0.88rem;
+    padding: 6px 12px;
+    min-width: 88px;
+  }
+  .reset-container button {
+    font-size: 0.88rem;
+    padding: 6px 12px;
+  }
+}
+
+/* Between 500px and 650px */
+@media (max-width: 650px) and (min-width: 501px) {
+  .grid {
+    width: 55vmin;
+  }
+  .hud-box {
+    font-size: 0.85rem;
+    padding: 5px 11px;
+    min-width: 85px;
+  }
+  .reset-container button {
+    font-size: 0.85rem;
+    padding: 5px 11px;
+  }
+}
+
+/* Between phone + tablet */
+@media (max-width: 600px) {
+  .grid {
+    width: 55vmin;
+  }
+  .hud-box {
+    font-size: 0.85rem;
+    padding: 6px 11px;
+    min-width: 85px;
+  }
+  .reset-container button {
+    font-size: 0.85rem;
+    padding: 6px 11px;
   }
 }
 
