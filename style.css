@@ -98,6 +98,24 @@ ul {
   border: 1px solid #444;
   font-size: 5vmin; /* scales with screen */
 }
+
+.door-red-top {
+  border-top: 9px solid red !important;
+}
+
+.door-red-bottom {
+  border-bottom: 9px solid red !important;
+}
+
+.door-purple-left {
+  border-left: 9px solid purple !important;
+}
+
+.door-purple-right {
+  border-right: 9px solid purple !important;
+}
+
+
 .corner {
   border: 3px solid gold !important;
   box-shadow: 0 0 10px gold;

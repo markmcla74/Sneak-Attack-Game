@@ -68,6 +68,18 @@
                 if ((r === 0 && c === 0) || (r === gridSize - 1 && c === gridSize - 1)) {
                     cellClass += " corner";
                 }
+                if (r === 0 && c === 2) {
+                    cellClass += " door-red-top"; // top row, glow on bottom edge
+                }
+                if (r === 5 && c === 2) {
+                    cellClass += " door-red-bottom"; // bottom row, glow on top edge
+                }
+                if (r === 3 && c === 0) {
+                    cellClass += " door-purple-left"; // left edge, glow on right side
+                }
+                if (r === 3 && c === 5) {
+                    cellClass += " door-purple-right"; // right edge, glow on left side
+                }
                 // Players
                 if (players.P1.row === r && players.P1.col === c) {
                     symbol = players.P1.symbol;
@@ -154,7 +166,7 @@
     document.addEventListener("keydown", (e) => {
         if (gameOver) return; // ignore keys if game ended
         const key = e.key;
-
+        let enterDoor = false;
         let player, opponent;
         if (currentPlayer === "P1") {
             player = players.P1;
@@ -279,11 +291,109 @@
 
 
             const dir = directions[key];
-            const newRow = player.row + dir[0];
-            const newCol = player.col + dir[1];
+            let newRow = player.row + dir[0];
+            let newCol = player.col + dir[1];
+            console.log(dir[0]);
+            console.log(dir[1]);
+            
+            //check purple door at row 3, col 0 for Player 1
+            if (currentPlayer === "P1" && player.row === 3 && player.col === 0 && e.key === "a" && enterDoor === false) {
+                    playChimeForPlayer("P1");
+                    newRow = 3;
+                    newCol = 5;
+                    enterDoor = true;
+            }
+            
+            
+             //check purple door at row 3, col 0 for Player 2
+            if (currentPlayer === "P2" && player.row === 3 && player.col === 0 && e.key === "ArrowLeft" && enterDoor === false) {
+                   playChimeForPlayer("P2");
+                    newRow = 3;
+                    newCol = 5;
+                    enterDoor = true;
+                
+            }
+            
+            //check purple door at row 3, col 5 for Player 1
+            if (currentPlayer === "P1" && player.row === 3 && player.col === 5 && e.key === "d" && enterDoor === false ) {
+                   playChimeForPlayer("P1");
+                    newRow = 3;
+                    newCol = 0;
+                    enterDoor = true;
+            }
+            
+            //check purple door at row 3, col 5 for Player 2
+            if (currentPlayer === "P2" && player.row === 3 && player.col === 5 && e.key === "ArrowRight") {
+                   playChimeForPlayer("P2");
+                    newRow = 3;
+                    newCol = 0;
+                    enterDoor = true;
+            }
+            
+            //check red door at row 0, col 2 for Player 1
+            if (currentPlayer === "P1" && player.row === 0 && player.col === 2 && e.key === "w") {
+                   playChimeForPlayer("P1");
+                    newRow = 5;
+                    newCol = 2;
+                    enterDoor = true;
+            }
+            
+            //check red door at row 0, col 2 for Player 2
+            if (currentPlayer === "P2" && player.row === 0 && player.col === 2 && e.key === "ArrowUp") {
+                   playChimeForPlayer("P2");
+                   newRow = 5;
+                    newCol = 2;
+                    enterDoor = true;
+            }
+            
+            //check red door at row 5, col 2 for Player 1
+            if (currentPlayer === "P1" && player.row === 5 && player.col === 2 && e.key === "s") {
+                  playChimeForPlayer("P1");
+                   newRow = 0;
+                    newCol = 2;
+                    enterDoor = true;
+            }
+            
+            //check red door at row 5, col 2 for Player 1
+            if (currentPlayer === "P2" && player.row === 5 && player.col === 2 && e.key === "ArrowDown") {
+                  playChimeForPlayer("P2");
+                   newRow = 0;
+                    newCol = 2;
+                    enterDoor = true;
+            }
+            
+            if (enterDoor === true){
+                player.row = newRow;
+                player.col = newCol;
 
-            // Stay inside grid bounds
-            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+
+                // If a camouflaged player moves to a tile with a different color, they should no longer be camouflaged, and return to original color
+                if (player.camouflaged) {
+                    if (grid[player.row][player.col] !== player.camouflagedColor) {
+                        // Different color → break camouflage
+                        player.camouflaged = false;
+                        player.camouflagedColor = null;
+                        player.symbol = "●";
+                    }
+                }
+
+                //check corner win
+                checkCornerWin();
+                if (!gameOver) {
+                    // Switch turns after a move
+                    if (currentPlayer === "P1") {
+                        currentPlayer = "P2";
+                    } else {
+                        currentPlayer = "P1";
+                    }
+
+                }
+                renderGrid();
+                return;
+            }
+
+            // Stay inside grid bounds for all other cases
+            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize && enterDoor === false) {
                 //playChime();
                 if (currentPlayer === "P1") {
                     playChimeForPlayer("P1");
