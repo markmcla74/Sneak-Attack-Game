@@ -373,3 +373,35 @@ background-color: lightblue; }
   padding: 5px 10px;
 }
 }
+/* If the window height is less than 800px */
+@media (max-height: 800px) {
+  .grid {
+    width: 65vmin; /* shrink grid a little */
+  }
+  .hud-box {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    min-width: 90px;
+  }
+  .reset-container button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+}
+
+/* If the window height is less than 600px */
+@media (max-height: 600px) {
+  .grid {
+    width: 55vmin; /* shrink more */
+  }
+  .hud-box {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    min-width: 80px;
+  }
+  .reset-container button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}
+
