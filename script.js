@@ -295,74 +295,74 @@
             let newCol = player.col + dir[1];
             console.log(dir[0]);
             console.log(dir[1]);
-            
+
             //check purple door at row 3, col 0 for Player 1
             if (currentPlayer === "P1" && player.row === 3 && player.col === 0 && e.key === "a" && enterDoor === false) {
-                    playChimeForPlayer("P1");
-                    newRow = 3;
-                    newCol = 5;
-                    enterDoor = true;
+                playChimeForPlayer("P1");
+                newRow = 3;
+                newCol = 5;
+                enterDoor = true;
             }
-            
-            
-             //check purple door at row 3, col 0 for Player 2
+
+
+            //check purple door at row 3, col 0 for Player 2
             if (currentPlayer === "P2" && player.row === 3 && player.col === 0 && e.key === "ArrowLeft" && enterDoor === false) {
-                   playChimeForPlayer("P2");
-                    newRow = 3;
-                    newCol = 5;
-                    enterDoor = true;
-                
+                playChimeForPlayer("P2");
+                newRow = 3;
+                newCol = 5;
+                enterDoor = true;
+
             }
-            
+
             //check purple door at row 3, col 5 for Player 1
-            if (currentPlayer === "P1" && player.row === 3 && player.col === 5 && e.key === "d" && enterDoor === false ) {
-                   playChimeForPlayer("P1");
-                    newRow = 3;
-                    newCol = 0;
-                    enterDoor = true;
+            if (currentPlayer === "P1" && player.row === 3 && player.col === 5 && e.key === "d" && enterDoor === false) {
+                playChimeForPlayer("P1");
+                newRow = 3;
+                newCol = 0;
+                enterDoor = true;
             }
-            
+
             //check purple door at row 3, col 5 for Player 2
             if (currentPlayer === "P2" && player.row === 3 && player.col === 5 && e.key === "ArrowRight") {
-                   playChimeForPlayer("P2");
-                    newRow = 3;
-                    newCol = 0;
-                    enterDoor = true;
+                playChimeForPlayer("P2");
+                newRow = 3;
+                newCol = 0;
+                enterDoor = true;
             }
-            
+
             //check red door at row 0, col 2 for Player 1
             if (currentPlayer === "P1" && player.row === 0 && player.col === 2 && e.key === "w") {
-                   playChimeForPlayer("P1");
-                    newRow = 5;
-                    newCol = 2;
-                    enterDoor = true;
+                playChimeForPlayer("P1");
+                newRow = 5;
+                newCol = 2;
+                enterDoor = true;
             }
-            
+
             //check red door at row 0, col 2 for Player 2
             if (currentPlayer === "P2" && player.row === 0 && player.col === 2 && e.key === "ArrowUp") {
-                   playChimeForPlayer("P2");
-                   newRow = 5;
-                    newCol = 2;
-                    enterDoor = true;
+                playChimeForPlayer("P2");
+                newRow = 5;
+                newCol = 2;
+                enterDoor = true;
             }
-            
+
             //check red door at row 5, col 2 for Player 1
             if (currentPlayer === "P1" && player.row === 5 && player.col === 2 && e.key === "s") {
-                  playChimeForPlayer("P1");
-                   newRow = 0;
-                    newCol = 2;
-                    enterDoor = true;
+                playChimeForPlayer("P1");
+                newRow = 0;
+                newCol = 2;
+                enterDoor = true;
             }
-            
+
             //check red door at row 5, col 2 for Player 1
             if (currentPlayer === "P2" && player.row === 5 && player.col === 2 && e.key === "ArrowDown") {
-                  playChimeForPlayer("P2");
-                   newRow = 0;
-                    newCol = 2;
-                    enterDoor = true;
+                playChimeForPlayer("P2");
+                newRow = 0;
+                newCol = 2;
+                enterDoor = true;
             }
-            
-            if (enterDoor === true){
+
+            if (enterDoor === true) {
                 player.row = newRow;
                 player.col = newCol;
 
