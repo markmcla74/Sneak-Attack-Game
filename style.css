@@ -98,18 +98,35 @@ ul {
   border: 1px solid #444;
   font-size: 5vmin; /* scales with screen */
 }
-.door-red-top {
-  border-top: 9px solid red !important;
+.door-orange-top {
+  border-top: 9px solid orange !important;
 }
 .door-red-bottom {
   border-bottom: 9px solid red !important;
 }
-.door-purple-left {
-  border-left: 9px solid purple !important;
+.door-blue-left {
+  border-left: 9px solid blue !important;
 }
 .door-purple-right {
   border-right: 9px solid purple !important;
 }
+
+.centerTile-orange {
+  border: 5px solid orange !important;
+}
+
+.centerTile-red {
+  border: 5px solid red !important;
+}
+
+.centerTile-blue {
+  border: 5px solid blue !important;
+}
+
+.centerTile-purple {
+  border: 5px solid purple !important;
+}
+
 .corner {
   border: 3px solid gold !important;
   box-shadow: 0 0 10px gold;

@@ -69,17 +69,31 @@
                     cellClass += " corner";
                 }
                 if (r === 0 && c === 2) {
-                    cellClass += " door-red-top"; // top row, glow on bottom edge
+                    cellClass += " door-orange-top"; // top row, glow on bottom edge
                 }
                 if (r === 5 && c === 2) {
                     cellClass += " door-red-bottom"; // bottom row, glow on top edge
                 }
                 if (r === 3 && c === 0) {
-                    cellClass += " door-purple-left"; // left edge, glow on right side
+                    cellClass += " door-blue-left"; // left edge, glow on right side
                 }
                 if (r === 3 && c === 5) {
                     cellClass += " door-purple-right"; // right edge, glow on left side
                 }
+                
+                if (r === 2 && c === 2) {
+                    cellClass += " centerTile-orange"; // top row, glow on bottom edge
+                }
+                if (r === 2 && c === 3) {
+                    cellClass += " centerTile-purple"; // bottom row, glow on top edge
+                }
+                if (r === 3 && c === 2) {
+                    cellClass += " centerTile-blue"; // left edge, glow on right side
+                }
+                if (r === 3 && c === 3) {
+                    cellClass += " centerTile-red"; // right edge, glow on left side
+                }
+                
                 // Players
                 if (players.P1.row === r && players.P1.col === c) {
                     symbol = players.P1.symbol;
@@ -296,20 +310,20 @@
             console.log(dir[0]);
             console.log(dir[1]);
 
-            //check purple door at row 3, col 0 for Player 1
+            //check blue door at row 3, col 0 for Player 1
             if (currentPlayer === "P1" && player.row === 3 && player.col === 0 && e.key === "a" && enterDoor === false) {
                 playChimeForPlayer("P1");
                 newRow = 3;
-                newCol = 5;
+                newCol = 2;
                 enterDoor = true;
             }
 
 
-            //check purple door at row 3, col 0 for Player 2
+            //check blue door at row 3, col 0 for Player 2
             if (currentPlayer === "P2" && player.row === 3 && player.col === 0 && e.key === "ArrowLeft" && enterDoor === false) {
                 playChimeForPlayer("P2");
                 newRow = 3;
-                newCol = 5;
+                newCol = 2;
                 enterDoor = true;
 
             }
@@ -317,31 +331,31 @@
             //check purple door at row 3, col 5 for Player 1
             if (currentPlayer === "P1" && player.row === 3 && player.col === 5 && e.key === "d" && enterDoor === false) {
                 playChimeForPlayer("P1");
-                newRow = 3;
-                newCol = 0;
+                newRow = 2;
+                newCol = 3;
                 enterDoor = true;
             }
 
             //check purple door at row 3, col 5 for Player 2
             if (currentPlayer === "P2" && player.row === 3 && player.col === 5 && e.key === "ArrowRight") {
                 playChimeForPlayer("P2");
-                newRow = 3;
-                newCol = 0;
+                newRow = 2;
+                newCol = 3;
                 enterDoor = true;
             }
 
-            //check red door at row 0, col 2 for Player 1
+            //check orange door at row 0, col 2 for Player 1
             if (currentPlayer === "P1" && player.row === 0 && player.col === 2 && e.key === "w") {
                 playChimeForPlayer("P1");
-                newRow = 5;
+                newRow = 2;
                 newCol = 2;
                 enterDoor = true;
             }
 
-            //check red door at row 0, col 2 for Player 2
+            //check orange door at row 0, col 2 for Player 2
             if (currentPlayer === "P2" && player.row === 0 && player.col === 2 && e.key === "ArrowUp") {
                 playChimeForPlayer("P2");
-                newRow = 5;
+                newRow = 2;
                 newCol = 2;
                 enterDoor = true;
             }
@@ -349,16 +363,16 @@
             //check red door at row 5, col 2 for Player 1
             if (currentPlayer === "P1" && player.row === 5 && player.col === 2 && e.key === "s") {
                 playChimeForPlayer("P1");
-                newRow = 0;
-                newCol = 2;
+                newRow = 3;
+                newCol = 3;
                 enterDoor = true;
             }
 
             //check red door at row 5, col 2 for Player 1
             if (currentPlayer === "P2" && player.row === 5 && player.col === 2 && e.key === "ArrowDown") {
                 playChimeForPlayer("P2");
-                newRow = 0;
-                newCol = 2;
+                newRow = 3;
+                newCol = 3;
                 enterDoor = true;
             }
 
